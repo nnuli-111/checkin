@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
   schedule:
+    # 每天北京时间 00:10 运行 (UTC 16:10)
     - cron: 10 16 * * *
 
 jobs:
@@ -15,7 +16,15 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
+      
+      # 原有的 GLaDOS 签到
       - run: npm run main
         env:
           GLADOS: ${{ secrets.GLADOS }}
           NOTIFY: ${{ secrets.NOTIFY }}
+      
+      # 新增的 ikuuu 签到步骤
+      # 必须确保你已经创建了 ikuuu.js 文件并配置了 IKUUU_COOKIE Secret
+      - run: node ikuuu.js
+        env:
+          IKUUU_COOKIE: ${{ secrets.IKUUU_COOKIE }}
